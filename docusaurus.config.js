@@ -5,13 +5,13 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 (module.exports = {
   title: 'LEMON EC',
   tagline: 'When life gives you lemons, why not use lemon-ec',
-  url: 'https://your-docusaurus-test-site.com',
+  url: 'https://docs-lemon.netlify.app',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
   organizationName: 'japandotorg', 
-  projectName: 'lemon-docs', 
+  projectName: 'LEMON-EC', 
 
   presets: [
     [
