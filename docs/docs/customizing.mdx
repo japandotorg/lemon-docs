@@ -1,0 +1,201 @@
+---
+id: react
+title: Customizing The Documentation
+sidebar_position: 1
+hide_title: true
+---
+
+```mdx-code-block
+import BrowserWindow from '@site/src/components/Browser';
+```
+
+# MDX and React
+
+## Using JSX in Markdown
+
+This documentation is built using Docusaurus, and it has built-in support for [MDX](https://mdxjs.com).
+Which allows users to write Javascript XML within your markdown files and render them as React components
+
+:::note
+
+While both `.md` and `.mdx` are parsed using MDX, some of the syntax are treated slightly differently.
+For the most accurate parsong and better editor support,
+I recommend using the `.mdx` extension for files containing MDX syntax
+
+:::
+
+:::caution
+
+MDX is **not** completely compatible with **CommonMark**.
+Use the **MDX playground** to ensure that your syntax is valid MDX
+
+:::
+
+### Example:
+
+```jsx
+export const Highlight = ({children, color}) => (
+  <span
+    style={{
+      backgroundColor: color,
+      borderRadius: '2px',
+      color: '#0c0c0c',
+      padding: '0.1rem',
+    }}>
+    {children}
+  </span>
+);
+
+<Highlight color="#fbfb04"LEMON</Highlight> and <Highlight color="#fc8eac">FLAMINGO</Highlight> are my favorite color
+
+I can use **jsx** with <u> markdown </u>
+```
+
+Notice how it renders both the markup from your React component and the Markdown syntax:
+
+```mdx-code-block
+export const Highlight = ({children, color}) => (
+  <span
+    style={{
+      backgroundColor: color,
+      borderRadius: '2px',
+      color: '#0c0c0c',
+      padding: '0.1rem',
+    }}>
+    {children}
+  </span>
+);
+
+<BrowserWindow minHeight={240} url="http://localhost:3000">
+
+<Highlight color="#fbfb04">LEMON</Highlight>
+{` `}and <Highlight color="#fc8eac">FLAMINGO</Highlight> are my favorite color
+
+I can use **jsx** with <u> markdown </u>
+
+</BrowserWindow>
+```
+<br />
+
+:::note
+
+You can also import your own components defined in other files or third-party components installed via npm
+Check out the [docs](https://mdxjs.com) to see what other fancy stuff you can do with MDX
+
+:::
+
+:::caution
+
+Since all doc files are parsed using MDX, any HTML is treated as JSX.
+Therefore, if you need to inline-style a component, follow JSX flavor and provide style objects.
+
+:::
+
+## Importing code snippets
+
+You can not only import a file containing a component definition, but also import any code 
+file as raw text, and then insert it in a code block, thanks to [webpack raw-loader](https://webpack.js.org/loaders/raw-loader/).
+In order to use `raw-loader`, first you need to install it in your project as follows:
+
+```mdx-code-block
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+<Tabs>
+<TabItem value="npm" label="npm" default>
+
+```bash
+npm install --save raw-loader
+```
+
+</TabItem>
+<TabItem value="yarn" label="yarn">
+
+```bash
+yarn add raw-loader
+```
+
+</TabItem>
+</Tabs>
+
+
+Now you can import code snippets from another file as follows:
+
+<!-- prettier-ignore-start -->
+```jsx title="myFile.mdx"
+import CodeBlock from '@theme/CodeBlock';
+import MyComponentSource from '!!raw-loader!./_myComponent';
+
+<CodeBlock className="language-jsx">{MyComponentSource}</CodeBlock>
+```
+<!-- prettier-ignore-end -->
+
+```mdx-code-block
+import CodeBlock from '@theme/CodeBlock';
+import MyComponentSource from '!!raw-loader!../../src/components/Tabs/_myComponent';
+
+<BrowserWindow url="http://localhost:3000">
+
+<CodeBlock className="language-jsx">{MyComponentSource}</CodeBlock>
+
+</BrowserWindow>
+
+<br />
+```
+You can also pass `title` prop to `CodeBlock` component in order to appear it as header above your codeblock as follows:
+
+```jsx
+<CodeBlock className="language-jsx" title="/src/myComponent">
+  {MyComponentSource}
+</CodeBlock>
+```
+
+:::note
+
+You have to use `<CodeBlock>` rather than the Markdown triple-backtick `````, because the latter wuth ship out any of it's content as-is, 
+but you want JSX to insertthe imported text here.
+
+:::
+
+:::warning
+
+This feature is experimental and might be subject to API breaking changes in future.
+
+:::
+
+## Importing Markdown
+
+You can use Markdown files as componentsand import them elsewhere, either in Markdown files 
+or in React pages. 
+
+By convention, using the **`_` filename prefix** will not create any doc page and means the markdown file is a 
+**partial**, to be imported by other files.
+
+```md title="_partial-example.mdx"
+<span>Hello {props.name}</span>
+
+This is text some content from `_partial-example.mdx`.
+```
+
+```jsx title="someOtherDoc.mdx"
+import PartialExample from './_partial-example.mdx';
+
+<PartialExample name="LEMON" />;
+```
+
+```mdx-code-block
+import PartialExample from './_partial-example.mdx';
+
+<BrowserWindow url="http://localhost:3000">
+  <PartialExample name="LEMON" />
+</BrowserWindow>
+
+<br />
+```
+
+:::caution
+
+The table-of-content does not currently contain the imported Markdown headings. 
+This is a technical limitation that **Docusaurus** is trying to solve
+
+:::
