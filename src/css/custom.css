@@ -20,6 +20,11 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
   background-color: rgba(0, 0, 0, 0.3);
 }
 
+html[data-theme='light'] {
+  --ifm-color-primary: #050505;
+  --ifm-color-primary-light: #050505;
+}
+
 .lemon-text {
   color: #f8f87b;
 }
